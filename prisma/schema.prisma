@@ -1,0 +1,96 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model emply {
+  id      String    @unique @default(uuid())
+  fname   String
+  mname   String
+  lname   String
+  jobID   String    @unique
+  dept    String
+  jbname  String?
+  isMgr   Boolean   @default(false)
+  fngrqst fngrqst[]
+  rqst    rqst[]
+}
+
+model rqst {
+  id               String    @unique @default(uuid())
+  whoAccepted      String?
+  dateOfAcceptance DateTime?
+  reason           String
+  comments         String?
+  attachments      String?
+  approvalStatus   String    @default("pending")
+  approverComments String?
+  createdBy        String
+  createdAt        DateTime  @default(now())
+  updatedBy        String?
+  updatedAt        DateTime?
+  dept             String
+  fname            String
+  isAccepted       Boolean   @default(false)
+  jobID            String
+  lname            String
+  mname            String
+  emply            emply     @relation(fields: [jobID], references: [jobID])
+
+  @@index([jobID], map: "rqst_jobID_fkey")
+}
+
+model module {
+  id      String    @unique @default(uuid())
+  name    String
+  program program[]
+}
+
+model program {
+  id       String @unique @default(uuid())
+  name     String
+  moduleId String
+  module   module @relation(fields: [moduleId], references: [id], map: "Program_moduleId_fkey")
+
+  @@index([moduleId], map: "Program_moduleId_fkey")
+}
+
+model user {
+  id        String   @unique @default(uuid())
+  username  String   @unique(map: "User_username_key")
+  email     String   @unique(map: "User_email_key")
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+model fngrqst {
+  id          String       @id @default(uuid())
+  ujobid      String
+  fname       String
+  mname       String
+  lname       String
+  dept        String
+  itapproval  Boolean      @default(false)
+  ceoapproval Boolean      @default(true)
+  sendersign  String
+  createddate DateTime     @default(now())
+  pdfreport   String?
+  stfitrqst   fngarchive[]
+  empjobid    emply        @relation(fields: [ujobid], references: [jobID])
+
+  @@index([ujobid], map: "fngrqst_ujobid_fkey")
+}
+
+model fngarchive {
+  id      String   @unique @default(uuid())
+  frqstid String
+  arcdate DateTime @default(now())
+  fngid   fngrqst  @relation(fields: [frqstid], references: [id])
+
+  @@index([frqstid], map: "fngarchive_frqstid_fkey")
+}
