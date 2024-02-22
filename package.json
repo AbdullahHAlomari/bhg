@@ -1,7 +1,6 @@
 {
-  "name": "bhg",
+  "name": "a",
   "version": "1.0.0",
-  "description": "",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -29,5 +28,6 @@
     "@types/express": "^4.17.21",
     "@types/node": "^20.11.19",
     "prisma": "^5.7.1"
-  }
+  },
+  "description": ""
 }
